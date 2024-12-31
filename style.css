@@ -794,12 +794,14 @@ form .send-btn:hover {
         flex-wrap: wrap; /* Allow wrapping on smaller screens */
         justify-content: center; /* Center the items */
         padding-top: 40px;
+        padding-bottom: 10px;
     }
     header.sticky {
         padding-top: 40px;
+        padding-bottom: 10px;
     }
     body {
-        padding-top: 90px; /* Adjust offset for mobile navbar */
+        padding-top: 100px; /* Adjust offset for mobile navbar */
     }
     :root  {
         --h1-font:3.5rem;
