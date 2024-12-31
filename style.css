@@ -350,6 +350,13 @@ header.sticky {
 }
 .projects {
     background: var(--second-bg-color);
+    /* display: grid; Use grid for responsive layout */
+    /* grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); Adjust columns dynamically */
+    /* gap: 20px; Space between cards */
+     /* padding: 20px;  */
+     margin: 0 auto; 
+    max-width: 1200px; /*Prevent cards from exceeding the container*/
+    overflow: hidden;
 }
 .Projects-content {
     display: grid;
