@@ -158,6 +158,31 @@ section {
     transform: scale(1.1);
     box-shadow: 0 0 20px var(--main-color);
 }
+
+#github-home-icon #linkedin-home-icon {
+    margin-bottom: 40px;
+}
+#github-home-icon #linkedin-home-icon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--main-color);
+    border-radius: 50%;
+    backdrop-filter: brightness(88%);
+    font-size: 20px;
+    margin-right: 17px;
+    box-shadow: 0 0 20px transparent;
+    cursor: pointer;
+    transition: all .50s ease;
+}
+#github-home-icon #linkedin-home-icon{
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--main-color);
+}
+
+
 .btn {
     display: inline-block;
     padding: 11px 26px;
