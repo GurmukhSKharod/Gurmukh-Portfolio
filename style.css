@@ -355,7 +355,7 @@ header.sticky {
     /* gap: 20px; Space between cards */
      /* padding: 20px;  */
      margin: 0 auto; 
-    max-width: 1200px; /*Prevent cards from exceeding the container*/
+    /* max-width: 1200px; Prevent cards from exceeding the container */
     overflow: hidden;
 }
 .Projects-content {
