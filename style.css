@@ -792,6 +792,25 @@ color: var(--other-color);
         right: 0;
     }
 }
+
+
+@media (max-width: 768px) {
+    .main-btn {
+        display: flex;
+        flex-direction: column; /* Stack the buttons vertically */
+        align-items: center;    /* Center-align the buttons */
+        gap: 10px;              /* Add spacing between buttons */
+        margin-top: 20px;       /* Add some top margin */
+    }
+
+    .main-btn .btn {
+        width: 80%;             /* Set button width for better visibility */
+        padding: 12px;          /* Ensure consistent padding */
+        text-align: center;     /* Center the text inside the button */
+    }
+}
+
+
 @media (max-width:680px) {
     .main-content p {
     width: 100%;
