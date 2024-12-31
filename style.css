@@ -21,6 +21,9 @@
 body {
     color: var(--text-color);
     background: var(--bg-color);
+    margin: 0;
+    padding-top: 70px; /* Adjust based on the height of your navbar */
+    overflow-x: hidden; /* Prevent horizontal scrolling on the entire page */
 }
 header {
     position: fixed;
