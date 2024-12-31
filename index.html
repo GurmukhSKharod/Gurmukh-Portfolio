@@ -13,6 +13,7 @@
   <!--remox icon-->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     
@@ -448,11 +449,12 @@
     <h2>Contact<span> Me</span></h2>
   </div>
   <div class="contact-form" data-aos="zoom-in">
-    <form action="">
-      <input type="text" placeholder="Your name" required>
-      <input type="email" placeholder="Email Address" required>
-      <textarea name="" id="" cols="30" rows="10" placeholder="Type your message here. Let’s collaborate! " required></textarea>
+    <form action="" id="contact-form">
+      <input type="text" name="user_name" placeholder="Your name" required>
+      <input type="email" name="user_email" placeholder="Email Address" required>
+      <textarea name="user_message" id="" cols="30" rows="10" placeholder="Type your message here. Let’s collaborate! " required></textarea>
       <input type="submit" value="Send Message" class="send-btn">
+      <p class = "contact_message" id="contact-message"></p>
     </form>
   </div>
 </section>

@@ -653,6 +653,22 @@ form .send-btn:hover {
     box-shadow: 0 0 20px var(--main-color);
     cursor: pointer;
 }
+
+.contact_message{
+    display: inline-block;
+    padding: 11px 26px;
+    color: var(--main-color);
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all .50s ease;
+    width: auto; /* Allow the button to adjust based on text length */
+    max-width: 100%; /* Prevent overflow */
+    text-align: center; /* Center-align the text */
+    white-space: nowrap; /* Ensure text doesn't wrap */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
+}
 .footer {
     padding: 22px 16%;
     background:var(--second-bg-color) ;
@@ -662,9 +678,9 @@ form .send-btn:hover {
     gap: 2rem;
 }
 .copyright p{
-font-size: 15px;
-font-weight: 400;
-color: var(--other-color);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--other-color);
 }
 .scroll-top i {
     display: inline-flex;
