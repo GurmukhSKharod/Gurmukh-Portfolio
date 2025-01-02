@@ -22,7 +22,7 @@ body {
     color: var(--text-color);
     background: var(--bg-color);
     margin: 0;
-    padding-top: 70px; /* Adjust based on the height of your navbar */
+    padding-top: 100px; /* Adjust based on the height of your navbar */
     overflow-x: hidden; /* Prevent horizontal scrolling on the entire page */
 }
 /* header {
@@ -49,8 +49,8 @@ header {
     justify-content: space-between; /* Spread items across the navbar */
     z-index: 1000; /* Ensure navbar is above all elements */
     background: var(--bg-color); /* Use your background color */
-    padding: 20px 8%; /* Adjust as needed */
-    /* padding-top: 40px;  */
+    padding: 10px 8%; 
+    /* padding-top: 0px;  */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional for subtle shadow */
     transition: all 0.5s ease-in-out; /* Smooth transition for hover or sticky effects */
 }
@@ -70,7 +70,7 @@ span {
     font-weight: 500;
     color: var(--other-color);
     margin-left: 40px;
-    padding: 10px 15px;
+    padding: 10px 5px;
     transition: all .50s ease;
 }
 .navlist a:hover {
@@ -792,14 +792,14 @@ form .send-btn:hover {
 @media (max-width:950px){
     header {
         flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        justify-content: center; /* Center the items */
+        /* justify-content: center; Center the items */
         /* padding-top: 40px; */
     }
     header.sticky {
         /* padding-top: 40px; */
     }
     body {
-        /* padding-top: 90px; Adjust offset for mobile navbar */
+        padding-top: 120px;
     }
     :root  {
         --h1-font:3.5rem;
