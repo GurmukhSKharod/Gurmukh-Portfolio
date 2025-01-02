@@ -50,7 +50,7 @@ header {
     z-index: 1000; /* Ensure navbar is above all elements */
     background: var(--bg-color); /* Use your background color */
     padding: 20px 8%; /* Adjust as needed */
-    padding-top: 40px; /* Add padding for safe area */
+    /* padding-top: 40px;  */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional for subtle shadow */
     transition: all 0.5s ease-in-out; /* Smooth transition for hover or sticky effects */
 }
@@ -215,7 +215,7 @@ header.sticky {
     /*box-shadow: 0 .1rem 1rem rgba(0,0,0,.2);*/
     /* padding: 16px 16%; */
     padding: 14px 8%; /* Adjust spacing for when scrolling */
-    padding-top: 40px; /* Adjust padding for sticky navbar */
+    /* padding-top: 40px; Adjust padding for sticky navbar */
 }
 .about {
     background: var(--second-bg-color);
@@ -792,15 +792,8 @@ form .send-btn:hover {
 @media (max-width:950px){
     header {
         flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        justify-content: center; /* Center the items */
-        padding-top: 40px;
-    }
-    header.sticky {
-        padding-top: 40px;
-    }
-    body {
-        padding-top: 90px; /* Adjust offset for mobile navbar */
-    }
+        
+    } 
     :root  {
         --h1-font:3.5rem;
     }
@@ -810,7 +803,7 @@ form .send-btn:hover {
     }
     #menu-icon{
         display: block;
-        padding: 20px;
+        padding: 0px;
 
     }
     .navlist {
@@ -860,17 +853,17 @@ form .send-btn:hover {
 }
 
 @media (max-width:470px) {
-:root {
-    --h1-font:3rem;
-    --h2-font:2rem;
-}
-.about-img img {
-    text-align: center;
-    width: 100%;
-    height: 300px;
-    max-width: 300px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto;
-}
+    :root {
+        --h1-font:3rem;
+        --h2-font:2rem;
+    }
+    .about-img img {
+        text-align: center;
+        width: 100%;
+        height: 300px;
+        max-width: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+    }
 }
