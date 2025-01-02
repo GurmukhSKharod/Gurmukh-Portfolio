@@ -212,7 +212,7 @@ section {
 }
 header.sticky {
     background: var(--bg-color);
-    /*box-shadow: 0 .1rem 1rem rgba(0,0,0,.2);*/
+    box-shadow: 0 .1rem 1rem rgba(0,0,0,.2);
     /* padding: 16px 16%; */
     padding: 14px 8%; /* Adjust spacing for when scrolling */
     /* padding-top: 40px; Adjust padding for sticky navbar */
@@ -793,13 +793,13 @@ form .send-btn:hover {
     header {
         flex-wrap: wrap; /* Allow wrapping on smaller screens */
         justify-content: center; /* Center the items */
-        padding-top: 40px;
+        /* padding-top: 40px; */
     }
     header.sticky {
-        padding-top: 40px;
+        /* padding-top: 40px; */
     }
     body {
-        padding-top: 90px; /* Adjust offset for mobile navbar */
+        /* padding-top: 90px; Adjust offset for mobile navbar */
     }
     :root  {
         --h1-font:3.5rem;
@@ -810,7 +810,7 @@ form .send-btn:hover {
     }
     #menu-icon{
         display: block;
-        padding: 0px;
+        padding: 10px 10px;
 
     }
     .navlist {
