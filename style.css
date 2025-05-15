@@ -914,6 +914,12 @@ form .send-btn:hover {
         padding: 12px;          /* Ensure consistent padding */
         text-align: center;     /* Center the text inside the button */
     }
+     /* Instantly display all AOS-animated elements */
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 
