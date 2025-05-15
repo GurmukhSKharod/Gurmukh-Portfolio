@@ -14,6 +14,24 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+  const isMobile = window.innerWidth <= 768;
+
+  if (!isMobile) {
+    AOS.init({
+      offset: 300,
+      duration: 1400,
+    });
+  } else {
+    // Optional: instantly show all AOS elements without animation
+    document.querySelectorAll('[data-aos]').forEach(el => {
+      el.removeAttribute('data-aos');
+      el.style.opacity = 1;
+      el.style.transform = 'none';
+    });
+  }
+</script>
+
 </head>
 <body>
     
