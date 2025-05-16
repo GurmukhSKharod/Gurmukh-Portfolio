@@ -445,10 +445,11 @@ header.sticky {
 }
 .Projects-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(500px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
     align-items: center;
     gap: 2.3rem;
     margin-top: 4.2rem;
+    width: 100%;
 }
 /* General Card Styling */
 .row {
@@ -456,15 +457,18 @@ header.sticky {
     border-radius: 28px;
     border: 1px solid transparent;
     box-shadow: 0 0 5px var(--main-color);
-    padding: 20px;
+    padding: 16px;
     transition: all 0.5s ease;
     position: relative;
     height: auto; /* Dynamic height */
+    width: 100%;
+    box-style: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
+
 }
 
 /* Hover Effect for Entire Card */
@@ -487,7 +491,7 @@ header.sticky {
 
 .row img {
     width: 100%;
-    height: 200px;
+    aspect-ratio: 16 / 9; /* Maintains consistent rectangular shape */
     object-fit: cover;
     border-radius: 28px;
     margin-bottom: 1.4rem;
