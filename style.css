@@ -936,9 +936,11 @@ form .send-btn:hover {
     transition: none !important;
   }
   .row {
-    max-width: 90vw;
-    margin: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
+    
 }
 
 
