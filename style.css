@@ -935,6 +935,10 @@ form .send-btn:hover {
     transform: none !important;
     transition: none !important;
   }
+  .row {
+    max-width: 90vw;
+    margin: auto;
+  }
 }
 
 
