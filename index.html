@@ -14,6 +14,24 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+  const isMobile = window.innerWidth <= 768;
+
+  if (!isMobile) {
+    AOS.init({
+      offset: 300,
+      duration: 1400,
+    });
+  } else {
+    // Optional: instantly show all AOS elements without animation
+    document.querySelectorAll('[data-aos]').forEach(el => {
+      el.removeAttribute('data-aos');
+      el.style.opacity = 1;
+      el.style.transform = 'none';
+    });
+  }
+</script>
+
 </head>
 <body>
     
@@ -46,7 +64,7 @@
 </div>
 <div class="main-btn">
   <a href="#projects" class="btn btn1">View My Projects</a>
-  <a href="./files/Resume_GurmukhKharod.pdf" download="Gurmukh_Kharod_Resume_2024.pdf" class="btn btn2">Download Resume</a>
+  <a href="./files/Resume - Gurmukh Kharod - Fall 2025.pdf" download="Resume - Gurmukh Kharod - Fall 2025.pdf" class="btn btn2">Download Resume</a>
 </div>
 
 </div>
@@ -498,7 +516,7 @@
       <br><br>
       This <span>full-stack testing platform</span> allows users to upload Python files and run <span>Unit, Property-Based, and Random tests</span> interactively. <br><br>
       Supports <span>live feedback, error handling, strategy selection, and result breakdowns</span> using a <span>FastAPI + React stack</span>. <br><br>
-      Includes <span>dark mode, drag & drop, animation, test status summaries</span>, and smart input randomization. <br><br>
+      Includes <span>dark mode, custom pie chart diagrams, drag & drop, animations, test status summaries</span>, and smart input randomization. <br><br>
     </p>
   </div>
   
@@ -676,94 +694,6 @@
     </p>
   </div>
 
-
-  
-
-  <!-- <div class="row"> 
-    <img src="./img/python-stats-ml.jpg" alt="Python Project">
-    <div class="main-row">
-        <h5>Python Data Science</h5>
-        <a href="https://github.com/GurmukhSKharod/PythonFinancialsApplication.git" target="_blank" rel="noopener noreferrer" class="github-icon">
-            <i class="ri-github-fill"></i>
-        </a>
-    </div>
-    <h4>Python Financials App with Statistics and AI Modeling</h4>
-    <div class="languages">
-      <div class="box">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
-        <h3>Python</h3>
-      </div>
-      <div class="box">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jupyter/jupyter-original-wordmark.svg" alt="Jupyter">
-        <h3>Jupyter</h3>
-      </div>
-    </div>
-    <p class="description">
-        This Python Machine Learning and Statistics App utilizes <span>NumPy, Scikit-learn</span> and <span>Pandas</span> for efficient data manipulation and analysis. <br><br> 
-        It processes data from multiple <span>CSV files</span> to identify trends in various financial statistics over several years. <br><br> 
-        Employs <span>statistical fundamentals</span> and <span>machine learning techniques</span>, including <span>linear regression</span> and <span>polynomial regression</span>, to predict future financial trends.
-    </p>
-  </div>  -->
-  <!-- <div class="row">
-    <img src="./img/port-2.jpg" alt="">
-    <div class="main-row">
-      <div class="row-text">
-        <h5>Website Design</h5>
-      </div>
-      <div class="row-icon">
-<i class="ri-github-fill"></i>
-      </div>
-    </div>
-    <h4>Website Development For Dark X</h4>
-  </div>
-  <div class="row">
-    <img src="./img/port-3.jpg" alt="">
-    <div class="main-row">
-      <div class="row-text">
-        <h5>Website Design</h5>
-      </div>
-      <div class="row-icon">
-<i class="ri-github-fill"></i>
-      </div>
-    </div>
-    <h4>Website Development For Dark X</h4>
-  </div>
-  <div class="row">
-    <img src="./img/port-4.jpg" alt="">
-    <div class="main-row">
-      <div class="row-text">
-        <h5>Website Design</h5>
-      </div>
-      <div class="row-icon">
-<i class="ri-github-fill"></i>
-      </div>
-    </div>
-    <h4>Website Development For Dark X</h4>
-  </div>
-  <div class="row">
-    <img src="./img/port-5.jpg" alt="">
-    <div class="main-row">
-      <div class="row-text">
-        <h5>Website Design</h5>
-      </div>
-      <div class="row-icon">
-<i class="ri-github-fill"></i>
-      </div>
-    </div>
-    <h4>Website Development For Dark X</h4>
-  </div>
-  <div class="row">
-    <img src="./img/port-6.jpg" alt="">
-    <div class="main-row">
-      <div class="row-text">
-        <h5>Website Design</h5>
-      </div>
-      <div class="row-icon">
-<i class="ri-github-fill"></i>
-      </div>
-    </div>
-    <h4>Website Development For Dark X</h4>
-  </div> -->
 </div>
 
 </section>

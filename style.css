@@ -445,10 +445,11 @@ header.sticky {
 }
 .Projects-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(500px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
     align-items: center;
     gap: 2.3rem;
     margin-top: 4.2rem;
+    width: 100%;
 }
 /* General Card Styling */
 .row {
@@ -456,15 +457,18 @@ header.sticky {
     border-radius: 28px;
     border: 1px solid transparent;
     box-shadow: 0 0 5px var(--main-color);
-    padding: 20px;
+    padding: 16px;
     transition: all 0.5s ease;
     position: relative;
     height: auto; /* Dynamic height */
+    width: 100%;
+    box-style: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
+
 }
 
 /* Hover Effect for Entire Card */
@@ -474,14 +478,25 @@ header.sticky {
     box-shadow: 0 0 15px var(--main-color); /* Glow effect */
 }
 
-/* Image Styling */
+/* Original image styling */
+/*
 .row img {
     height: auto;
     width: 100%;
     border-radius: 28px;
     margin-bottom: 1.4rem;
-    object-fit: cover; /* Maintain image proportion */
+    object-fit: cover;
 }
+*/
+
+.row img {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Maintains consistent rectangular shape */
+    object-fit: cover;
+    border-radius: 28px;
+    margin-bottom: 1.4rem;
+}
+
 
 /* Header and Icon Row */
 .main-row {
@@ -914,6 +929,18 @@ form .send-btn:hover {
         padding: 12px;          /* Ensure consistent padding */
         text-align: center;     /* Center the text inside the button */
     }
+     /* Instantly display all AOS-animated elements */
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .row {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+    
 }
 
 
