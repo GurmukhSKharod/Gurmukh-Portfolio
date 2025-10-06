@@ -15,27 +15,361 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-  const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 768;
 
-  if (!isMobile) {
-    AOS.init({
-      offset: 300,
-      duration: 1400,
-    });
-  } else {
-    // Optional: instantly show all AOS elements without animation
-    document.querySelectorAll('[data-aos]').forEach(el => {
-      el.removeAttribute('data-aos');
-      el.style.opacity = 1;
-      el.style.transform = 'none';
-    });
-  }
-</script>
+    if (!isMobile) {
+      AOS.init({
+        offset: 300,
+        duration: 1400,
+      });
+    } else {
+      // Optional: instantly show all AOS elements without animation
+      document.querySelectorAll('[data-aos]').forEach(el => {
+        el.removeAttribute('data-aos');
+        el.style.opacity = 1;
+        el.style.transform = 'none';
+      });
+    }
+  </script>
 
 </head>
+<script>
+/* =====================  SITE BOILERPLATE  ===================== */
+document.addEventListener('DOMContentLoaded', () => {
+  // AOS (safe)
+  if (window.AOS && typeof AOS.init === 'function') {
+    AOS.init({ once: true, duration: 700 });
+  }
+
+  // Mobile nav toggle
+  const menu = document.querySelector('#menu-icon');
+  const nav  = document.querySelector('.navlist');
+  if (menu && nav) {
+    menu.addEventListener('click', () => {
+      nav.classList.toggle('active');
+      menu.classList.toggle('bx-x');
+    });
+    window.addEventListener('scroll', () => {
+      nav.classList.remove('active');
+      menu.classList.remove('bx-x');
+    });
+  }
+
+  /* =====================  SKILLS WHEEL  ===================== */
+  const skillsSec = document.getElementById('skills');
+  if (!skillsSec) return;
+
+  // Ensure wheel container exists
+  let wheelEl = document.getElementById('skills-wheel');
+  if (!wheelEl) {
+    wheelEl = document.createElement('div');
+    wheelEl.id = 'skills-wheel';
+    wheelEl.className = 'skills-wheel';
+    const heading = skillsSec.querySelector('.center-text');
+    if (heading) heading.insertAdjacentElement('afterend', wheelEl);
+    else skillsSec.prepend(wheelEl);
+  }
+
+  // Pull sections from your existing markup
+  const sectionsEls = [...skillsSec.querySelectorAll('.skills-section')];
+  if (!sectionsEls.length) return;
+
+  const sections = sectionsEls.map(sec => {
+    const title = sec.querySelector('.section-title')?.textContent?.trim() || 'Untitled';
+    const items = [...sec.querySelectorAll('.skills-content .box')].map(box => ({
+      img : box.querySelector('img')?.getAttribute('src') || '',
+      name: box.querySelector('h3')?.textContent?.trim() || 'Skill'
+    }));
+    return { title, items };
+  });
+
+  buildWheel(wheelEl, sections);
+  skillsSec.setAttribute('data-wheel-ready', 'true');
+
+  /* ------------------ wheel builder ------------------ */
+  function buildWheel(container, sections){
+    const size = container.clientWidth || 600;
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+    svg.setAttribute('role', 'img');
+    container.appendChild(svg);
+
+    const cx = size/2, cy = size/2;
+    const cs = getComputedStyle(document.documentElement);
+    const ring = parseFloat(cs.getPropertyValue('--ring-thickness')) || 28;
+    const gapDeg = parseFloat(cs.getPropertyValue('--slice-gap')) || 2.5;
+    const labelOffset = parseFloat(cs.getPropertyValue('--label-offset')) || 24;
+    const rOuter = size * 0.44;
+    const r = rOuter - ring/2;
+
+    // Titles (main + hover subtitle)
+    const center = document.createElement('div');
+    center.className = 'wheel-center';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'title';
+    const defaultTitleHTML = `Choose a piece<span class="mobile-break"></span>to reveal its skills`;
+    titleEl.innerHTML = defaultTitleHTML;
+
+    const hoverEl = document.createElement('div');
+    hoverEl.className = 'title tight';
+    hoverEl.style.marginTop = '0.55rem';
+    hoverEl.style.opacity = '0.85';
+    hoverEl.textContent = '';
+
+    center.appendChild(titleEl);
+    center.appendChild(hoverEl);
+    container.appendChild(center);
+
+    // Center panel where chips appear
+    const panelWrap = document.createElement('div');
+    panelWrap.className = 'center-panel';
+    const panel = document.createElement('div');
+    panel.className = 'center-card';
+    const floatLayer = document.createElement('div');
+    floatLayer.className = 'float-layer';
+    panel.appendChild(floatLayer);
+    panelWrap.appendChild(panel);
+    container.appendChild(panelWrap);
+
+    // Helpers
+    const palette = ['#5B8CFF','#60CFA4','#F6BD16','#5AD8A6','#F6903D','#E868A2','#6DC8EC','#9270CA','#269A99','#FF99C3','#94E08A'];
+    const toRad  = d => (d-90) * Math.PI/180;
+    const polar  = (radius, aDeg) => ({ x: cx + radius*Math.cos(toRad(aDeg)), y: cy + radius*Math.sin(toRad(aDeg)) });
+    const arcPath = (radius, a0, a1) => {
+      const p0 = polar(radius, a0), p1 = polar(radius, a1);
+      const large = ((a1 - a0 + 360) % 360) > 180 ? 1 : 0;
+      return `M ${p0.x} ${p0.y} A ${radius} ${radius} 0 ${large} 1 ${p1.x} ${p1.y}`;
+    };
+    const placeOutsideLabel = (el, angleDeg)=>{
+      const R = r + ring/2 + labelOffset;
+      const p = polar(R, angleDeg);
+      el.style.left = `${p.x}px`; el.style.top = `${p.y}px`;
+    };
+
+    // Build slices
+    const total = Math.max(1, sections.reduce((s, x) => s + x.items.length, 0));
+    let cursor = 0;
+    const slices = [];
+    let openIndex = -1;
+
+    sections.forEach((sec, i) => {
+      const pct  = sec.items.length / total;
+      const sweep = Math.max(4, pct*360 - gapDeg);
+      const start = cursor + gapDeg/2;
+      const end   = start + sweep;
+      const mid   = (start + end)/2;
+      cursor += pct*360;
+
+      const g = document.createElementNS(svgNS, 'g'); g.setAttribute('class','slice');
+      const color = palette[i % palette.length];
+      g.style.setProperty('--slice-color', color);
+
+      const main = document.createElementNS(svgNS, 'path');
+      main.setAttribute('class','main');
+      main.setAttribute('d', arcPath(r, start, end));
+      main.setAttribute('stroke', color);
+      main.setAttribute('stroke-width', ring);
+      main.setAttribute('opacity', '0.95');
+      g.appendChild(main);
+
+      const inner = document.createElementNS(svgNS, 'path');
+      inner.setAttribute('class','inner');
+      const innerR = r - ring*0.35;
+      inner.setAttribute('d', arcPath(innerR, start, end));
+      inner.setAttribute('stroke', color);
+      inner.setAttribute('stroke-width', ring*0.55);
+      inner.setAttribute('opacity', '.55');
+      g.appendChild(inner);
+
+      svg.appendChild(g);
+
+      const label = document.createElement('div');
+      label.className = 'slice-label';
+      label.textContent = `${sec.title} • ${sec.items.length} ${sec.items.length===1?'skill':'skills'} — click`;
+      container.appendChild(label);
+      placeOutsideLabel(label, mid);
+
+      // Hover: show ONLY secondary (colored) subtitle
+      g.addEventListener('mouseenter', () => {
+        hoverEl.textContent = sec.title;
+        hoverEl.style.color = color;
+      });
+      g.addEventListener('mouseleave', () => {
+        hoverEl.textContent = '';
+      });
+
+      // Click: set active & render chips
+      g.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        openSlice(i);
+      });
+
+      slices.push({ g, sec, color });
+    });
+
+    function openSlice(i){
+      if (openIndex >= 0) slices[openIndex].g.removeAttribute('data-active');
+      const s = slices[i];
+      s.g.setAttribute('data-active','true');
+      openIndex = i;
+
+      titleEl.textContent = s.sec.title;   // main title becomes section
+      hoverEl.textContent = '';            // hide secondary
+
+      floatLayer.innerHTML = '';
+      panel.style.display = 'block';
+      layoutChipsEvenRings(s.sec.items);
+    }
+
+    /* ------------------ layout: 1 ring for ≤8 (with capacity fallback), else 2/3 rings ------------------ */
+    function layoutChipsEvenRings(items){
+      const n = items.length;
+      if (!n) { floatLayer.innerHTML = ''; return; }
+
+      // Measure chip (base size); we scale by 0.6 (40% smaller)
+      const probe = document.createElement('div');
+      probe.className = 'chip';
+      probe.style.position = 'absolute';
+      probe.style.left = '-9999px';
+      probe.innerHTML = `<img style="width:40px;height:40px"/><span>Measure</span>`;
+      panel.appendChild(probe);
+      const baseW = probe.offsetWidth  || 96;
+      const baseH = probe.offsetHeight || 84;
+      panel.removeChild(probe);
+
+      const SCALE = 0.6;                     // 40% smaller
+      const chipW = baseW * SCALE;
+      const chipH = baseH * SCALE;
+      const pad   = 10;
+      const diag  = Math.hypot(chipW, chipH) / 2;
+
+      const panelR = Math.min(panel.clientWidth, panel.clientHeight)/2;
+
+      // Title keep-out (cap at 35% so long labels don't kill layout)
+      const tbox = titleEl.getBoundingClientRect();
+      const rawTitleR = Math.max(tbox.width, tbox.height)/2 + 14;
+      const titleR = Math.min(rawTitleR, panelR * 0.35);
+
+      const innerR = Math.max(titleR + chipH*0.5 + pad, chipH);
+      const outerR = panelR - diag - pad;
+      if (outerR <= innerR) return;
+
+      // Decide ring count: 1 ring for ≤8 by default
+      let rings = (n <= 8) ? 1 : (n <= 14 ? 2 : 3);
+
+      // Radii generator
+      const makeRadii = (rings) => {
+        if (rings === 1) return [(innerR + outerR)/2];
+        if (rings === 2) return [
+          innerR + (outerR-innerR)*0.42,
+          innerR + (outerR-innerR)*0.80
+        ];
+        return [
+          innerR + (outerR-innerR)*0.30,
+          innerR + (outerR-innerR)*0.58,
+          innerR + (outerR-innerR)*0.86
+        ];
+      };
+
+      // Capacity check (fallback to 2 rings if 1 ring can't fit)
+      let radii = makeRadii(rings);
+      let capacity = radii.map(R => Math.max(1, Math.floor((2*Math.PI*R) / (chipW + pad))));
+      if (rings === 1 && n > capacity[0]) {
+        rings = 2;
+        radii = makeRadii(2);
+        capacity = radii.map(R => Math.max(1, Math.floor((2*Math.PI*R) / (chipW + pad))));
+      }
+
+      // Distribute counts across rings
+      const counts = new Array(rings).fill(0);
+      if (rings === 1) {
+        counts[0] = Math.min(n, capacity[0]);
+      } else if (rings === 2) {
+        // Prefer smaller inner, fit to capacity, then spill remainder to outer
+        let inner = Math.min(Math.floor(n/2), capacity[0]);
+        let outer = Math.min(n - inner, capacity[1]);
+        // If still leftover, push to ring with space
+        let placed = inner + outer;
+        while (placed < n && (inner < capacity[0] || outer < capacity[1])) {
+          if (outer < capacity[1]) { outer++; placed++; }
+          else if (inner < capacity[0]) { inner++; placed++; }
+          else break;
+        }
+        counts[0] = inner; counts[1] = outer;
+      } else {
+        // 3 rings: outer ~40%, mid ~35%, remainder inner, then fill remaining space round-robin
+        const outer = Math.min(capacity[2], Math.ceil(n*0.40));
+        const mid   = Math.min(capacity[1], Math.ceil((n-outer)*0.46));
+        const inner = Math.min(capacity[0], n - outer - mid);
+        counts[0] = inner; counts[1] = mid; counts[2] = outer;
+
+        let placed = counts.reduce((a,b)=>a+b,0), k = 0;
+        while (placed < n && (counts[0] < capacity[0] || counts[1] < capacity[1] || counts[2] < capacity[2])) {
+          if (counts[k] < capacity[k]) { counts[k]++; placed++; }
+          k = (k+1) % 3;
+        }
+      }
+
+      // Place items
+      floatLayer.innerHTML = '';
+      let used = 0;
+      const baseOffset = Math.random() * Math.PI * 2;
+
+      for (let ringIdx = 0; ringIdx < rings; ringIdx++) {
+        const count = Math.min(counts[ringIdx], n - used);
+        if (count <= 0) continue;
+
+        const R = radii[ringIdx];
+        const step = (Math.PI * 2) / count;
+
+        // Stagger rings: half-step on inner when 2 rings to avoid radial alignment
+        let offset = baseOffset;
+        if (rings === 2 && ringIdx === 0) offset += step / 2;
+        if (rings === 3) offset += ringIdx * (Math.PI / 7); // slight unique offset per ring
+        offset += (Math.random() - 0.5) * 0.10;
+
+        for (let k = 0; k < count && used < n; k++, used++) {
+          const it = items[used];
+          const ang = offset + k * step;
+          const x   = R * Math.cos(ang);
+          const y   = R * Math.sin(ang);
+
+          const carrier = document.createElement('div');
+          carrier.className = 'skill-float';
+          carrier.style.setProperty('--x', x);
+          carrier.style.setProperty('--y', y);
+          carrier.style.transitionDelay = `${Math.floor(Math.random()*260)}ms`;
+
+          // 40% smaller tiles via chip-zoom
+          const zoom = document.createElement('div');
+          zoom.className = 'chip-zoom';
+          zoom.style.setProperty('--s', '0.6');
+
+          const chip = document.createElement('div');
+          chip.className = 'chip';
+          chip.style.setProperty('--ax', `${(Math.random()*6 + 3) * (Math.random()<.5 ? -1 : 1)}px`);
+          chip.style.setProperty('--ay', `${(Math.random()*6 + 3) * (Math.random()<.5 ? -1 : 1)}px`);
+          chip.style.setProperty('--t',  `${(Math.random()*3 + 5).toFixed(2)}s`);
+          chip.style.setProperty('--delay', `${Math.floor(Math.random()*350)}ms`);
+          chip.innerHTML = `<img src="${it.img}" alt="${it.name}" loading="lazy"><span>${it.name}</span>`;
+
+          zoom.appendChild(chip);
+          carrier.appendChild(zoom);
+          floatLayer.appendChild(carrier);
+          requestAnimationFrame(()=> carrier.classList.add('entered'));
+        }
+      }
+    }
+  }
+});
+
+
+</script>
+
 <body>
     
-
 <header>
   <a href="#" class="logo">Gurmukh <span>Kharod</span></a>
   <div class="bx bx-menu" id="menu-icon"></div>
@@ -118,6 +452,8 @@
     <h2><span>Skills & Technologies</span> </h2>
   </div>
 
+  <div id="skills-wheel" class="skills-wheel" aria-label="Skills wheel"></div>
+
   <!-- OOP Languages -->
   <div class="skills-section">
     <h3 class="section-title" data-aos="fade-down" data-aos-duration="300">OOP Languages</h3>
@@ -178,6 +514,10 @@
         <h3>React</h3>
       </div>
       <div class="box">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" />
+        <h3>React Native</h3>
+      </div>
+      <div class="box">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
         <h3>Node.js</h3>
       </div>
@@ -192,10 +532,6 @@
       <div class="box">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" />
         <h3>Tailwind</h3>
-      </div>
-      <div class="box">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/materialui/materialui-original.svg" />
-        <h3>Material UI</h3>
       </div>
       <div class="box">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" />
@@ -216,10 +552,6 @@
       <div class="box">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" />
         <h3>VS Code</h3>
-      </div>
-      <div class="box">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jetbrains/jetbrains-original.svg" />
-        <h3>Jet Brains</h3>
       </div>
       <div class="box">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/intellij/intellij-original.svg" />
