@@ -451,6 +451,33 @@ header.sticky {
     margin-top: 4.2rem;
     width: 100%;
 }
+
+/* === Projects: fly-in/out animations (desktop only) === */
+.row.proj-anim{
+  opacity: 0;
+  /* separate translate so it doesn't fight your :hover scale */
+  translate: var(--tx, 0) var(--ty, 0);
+  transition:
+    translate 700ms cubic-bezier(.15,.9,.16,1),
+    opacity 600ms ease;
+  will-change: translate, opacity;
+}
+
+/* when the section is in view */
+.row.proj-anim.is-in{
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* mobile / reduced motion: static */
+@media (max-width: 768px){
+  .row.proj-anim{
+    opacity: 1 !important;
+    translate: 0 0 !important;
+    transition: none !important;
+  }
+}
+
 /* General Card Styling */
 .row {
     background: #2d343f;
@@ -925,6 +952,165 @@ form .send-btn:hover {
 #skills[data-wheel-ready="true"] .skills-section {
   display: none !important;
 }
+
+/* Slogan base */
+.slogan{
+  font-size: clamp(1.5rem, 2.5vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: .2px;
+  margin-top: .25rem;
+}
+
+/* Each character */
+.slogan .char{
+  display: inline-block;
+  white-space: pre;                 /* preserves spaces */
+  transform: translateX(-1em);
+  color: var(--text-color);
+  opacity: 0;
+  filter: blur(4px);
+  will-change: transform, opacity, filter;
+}
+
+/* Play state triggers the staggered reveal */
+.slogan.play .char{
+  animation: sloganCharIn .6s cubic-bezier(.2,.7,0,1) forwards;
+  animation-delay: calc(var(--i) * 0.035s);  /* stagger left→right */
+}
+
+/* only “problem” and “product” go blue */
+.slogan .char.accent { 
+  color: var(--main-color);
+  text-shadow: 0 0 12px rgba(19,187,255,.25);
+}
+
+
+/* Reduced motion = no animation */
+@media (prefers-reduced-motion: reduce){
+  .slogan .char{ animation: none !important; transform:none; opacity:1; filter:none; }
+}
+
+@keyframes sloganCharIn{
+  0%   { transform: translateX(-1em); opacity: 0; filter: blur(4px); }
+  100% { transform: translateX(0);    opacity: 1; filter: blur(0); }
+}
+
+
+
+
+/* About layout */
+.about {
+  background: var(--second-bg-color);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+.about-img {
+  display: grid;
+  place-items: center;
+}
+.about-img img{
+  width: 100%;
+  height: 420px;
+  max-width: 420px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 7px solid var(--main-color);
+  box-shadow: 0 0 20px var(--main-color);
+}
+
+/* Text block */
+.about-text h2{
+  font-size: var(--h2-font);
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+/* Key/value list */
+.info-list{
+  list-style: none;
+  margin: 0 0 1.25rem 0;
+  padding: 0;
+  display: grid;
+  gap: .55rem;
+}
+.info-list .label{
+  font-weight: 700;
+  color: var(--text-color);
+  margin-right: .35rem;
+}
+.info-list .value{
+  color: var(--other-color);
+}
+.info-list a.value{
+  color: var(--other-color);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Education */
+.edu-section h3{
+  margin: .5rem 0 .75rem;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+.edu-list{
+  display: grid;
+  gap: .75rem;
+}
+.edu-card{
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: .85rem;
+  align-items: center;
+  background: #2d343f;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: .8rem .9rem;
+  box-shadow: 0 0 5px rgba(0,0,0,.18);
+}
+.edu-logo{
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #1b1f24;
+  padding: 6px;
+}
+.edu-meta .degree{ font-weight: 700; color: var(--text-color); }
+.edu-meta .school{ color: var(--other-color); }
+.edu-meta .dates { color: var(--other-color); opacity: .8; font-size: .95rem; }
+
+/* Reveal animations (photo from left, text from right) */
+.about-animate-left{
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.about-animate-left.is-in{
+  opacity: 1; transform: none;
+}
+.reveal-item{
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.reveal-item.is-in{
+  opacity: 1; transform: none;
+}
+
+/* Responsive */
+@media (max-width:1240px){
+  .about{ grid-template-columns: 1fr; }
+  .about-img img{ height: 360px; max-width: 360px; }
+}
+@media (max-width:470px){
+  .about-img img{ height: 300px; max-width: 300px; }
+}
+
+
 
 /* Hide the old list (uncomment to debug) */
 /* .skills .skills-section{ display:none; } */

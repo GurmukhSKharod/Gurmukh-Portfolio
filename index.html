@@ -368,6 +368,159 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
+<script>
+(function(){
+  const onReady = (fn) => (document.readyState !== 'loading')
+    ? fn()
+    : document.addEventListener('DOMContentLoaded', fn);
+
+  onReady(() => {
+    const projectsSection = document.getElementById('projects');
+    if (!projectsSection) return;
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const cards = Array.from(projectsSection.querySelectorAll('.Projects-content > .row'));
+
+    // mobile / reduced-motion: static
+    if (isMobile || reduceMotion) {
+      cards.forEach(el => el.classList.remove('proj-anim', 'is-in'));
+      return;
+    }
+
+    const STAGGER_MS = 300; // 0.33s between cards
+    const dirs = ['left','right','up','down'];
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function setOffset(el, dir, distX, distY){
+      let tx = '0px', ty = '0px';
+      if (dir === 'left')  tx = `-${distX}px`;
+      if (dir === 'right') tx = `${distX}px`;
+      if (dir === 'up')    ty = `-${distY}px`;
+      if (dir === 'down')  ty = `${distY}px`;
+      el.style.setProperty('--tx', tx);
+      el.style.setProperty('--ty', ty);
+    }
+
+    // Initial setup: assign random IN directions + off-screen offsets
+    cards.forEach((el) => {
+      el.classList.add('proj-anim');
+      const inDir = pick(dirs);
+      el.dataset.inDir = inDir;
+      const inDX = 140 + Math.round(Math.random() * 80);
+      const inDY = 140 + Math.round(Math.random() * 80);
+      setOffset(el, inDir, inDX, inDY);
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Staggered fly-in: 0ms, 330ms, 660ms, ...
+          cards.forEach((el, idx) => {
+            el.dataset.outDir = pick(dirs);
+            el.style.transitionDelay = `${idx * STAGGER_MS}ms`;
+            requestAnimationFrame(() => el.classList.add('is-in'));
+          });
+        } else {
+        }
+      });
+    }, { root: null, threshold: 0.35 });
+
+    io.observe(projectsSection);
+  });
+})();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const about = document.getElementById('about');
+  if (!about) return;
+
+  const img = about.querySelector('.about-animate-left');
+  const lines = [...about.querySelectorAll('.reveal-item')];
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.innerWidth <= 768;
+
+  const showAllNow = () => {
+    if (img) img.classList.add('is-in');
+    lines.forEach(el => el.classList.add('is-in'));
+  };
+
+  if (prefersReduced || isMobile) {
+    showAllNow();
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (!entry.isIntersecting) return;
+
+    // image first
+    if (img) img.classList.add('is-in');
+
+    // then lines with 0.2s stagger
+    const STAGGER = 200;
+    lines.forEach((el, i) => {
+      el.style.transitionDelay = `${i * STAGGER}ms`;
+      // ensure repaint when delays set before class add
+      requestAnimationFrame(() => el.classList.add('is-in'));
+    });
+
+    io.unobserve(about); // run once
+  }, { threshold: 0.3 });
+
+  io.observe(about);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const el = document.querySelector('.slogan.letters');
+  if (!el || el.dataset.letterized === '1') return;
+  el.dataset.letterized = '1';
+
+  // Split into character spans, preserving accent color
+  let i = 0;
+  const frag = document.createDocumentFragment();
+
+  const walk = (node, isAccent = false) => {
+    node.childNodes.forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        for (const ch of child.textContent) {
+          const span = document.createElement('span');
+          span.className = 'char' + (isAccent ? ' accent' : '');
+          span.textContent = ch;
+          span.style.setProperty('--i', i++);
+          frag.appendChild(span);
+        }
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        walk(child, isAccent || child.classList.contains('accent'));
+      }
+    });
+  };
+
+  walk(el);
+  el.innerHTML = '';
+  el.appendChild(frag);
+
+  // Trigger when visible (so it plays on scroll/load)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        el.classList.add('play');
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.6 });
+
+  io.observe(el);
+});
+</script>
+
+
 <body>
     
 <header>
@@ -390,7 +543,9 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="main-content" data-aos="fade-in">
   <h4>Hello, <span class="wave-emoji">👋</span> my name is</h4>
   <h1><span>Gurmukh Kharod</span></h1>
-  <p>I am a passionate <span>software developer</span>, captivated by <span>limitless possibilities</span>, to create impactful solutions in an <span>ever-evolving industry</span>.</p>
+  <p class="slogan letters" >
+    From <span class="accent">PROBLEM</span> to <span class="accent">PRODUCT</span>.
+  </p>
 <div class="social">
   <a href="https://www.linkedin.com/in/gurmukh-k-59604b272/" target="_blank" rel="noopener noreferrer"><i class="ri-linkedin-fill"></i></a>
   <a href="https://github.com/GurmukhSKharod" target="_blank" rel="noopener noreferrer"><i class="ri-github-fill"></i></a>
@@ -406,46 +561,45 @@ document.addEventListener('DOMContentLoaded', () => {
 </section>
 
 <section class="about" id="about">
-  <div class="about-img" data-aos="zoom-in-down" data-aos-duration="370">
-    <img src="./img/about.jpg" >
+  <div class="about-img about-animate-left">
+    <img src="./img/about.jpg" alt="Gurmukh Kharod" />
   </div>
-<div class="about-text" data-aos="zoom-in-up" data-aos-duration="370" data-aos-delay="250">
-  <h2>I am a <span>Full-Stack Developer</span> </h2>
-  <div class="exp-area" >
-    
-    <p class="exp">
-      Speciality:
-      <span>Full Stack Developer</span>
-    </p>
-    <p class="exp">
-      Location: 
-      <span>Vancouver, British Columbia, Canada</span>
-    </p>
-    
-    <p class="exp">
-      Email: 
-      <span>gurmukhkharod@hotmail.com</span>
-    </p>
-    <p class="exp">
-      Education:
-      <ul>
-        <li>
-          <strong>Applied Sciences Degree</strong><br>
-          Simon Fraser University (2022 - Present)
-        </li>
-        <br>
-        <li>
-          <strong>Computer Studies and Information Systems Diploma</strong><br>
-          Douglas College (2018 - 2021)
-        </li>
-      </ul>
-    </p>
-    
-  </div>
-  <a href="#projects" class="btn">View All Projects</a>
-</div>
 
+  <div class="about-text">
+    <h2 class="reveal-item">I am a <span>Full-Stack Developer</span></h2>
+
+    <ul class="info-list">
+      <li class="reveal-item"><span class="label">Speciality:</span> <span class="value">Full Stack Developer</span></li>
+      <li class="reveal-item"><span class="label">Location:</span> <span class="value">Vancouver, British Columbia, Canada</span></li>
+      <li class="reveal-item"><span class="label">Email:</span> <a class="value" href="mailto:gurmukhkharod@hotmail.com">gurmukhkharod@hotmail.com</a></li>
+    </ul>
+
+    <div class="edu-section">
+      <h3 class="reveal-item">Education</h3>
+
+      <div class="edu-list">
+        <article class="edu-card reveal-item">
+          <img class="edu-logo" src="./img/sfu-logo.png" alt="SFU Logo" />
+          <div class="edu-meta">
+            <div class="degree">Applied Sciences Degree</div>
+            <div class="school">Simon Fraser University</div>
+            <div class="dates">(2022 – Present)</div>
+          </div>
+        </article>
+
+        <article class="edu-card reveal-item">
+          <img class="edu-logo" src="./img/douglas-logo.png" alt="Douglas College Logo" />
+          <div class="edu-meta">
+            <div class="degree">Computer Studies & Information Systems Diploma</div>
+            <div class="school">Douglas College</div>
+            <div class="dates">(2018 – 2021)</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
 </section>
+
 
 <section class="skills" id="skills">
   <div class="center-text" data-aos="fade-down" data-aos-duration="300">
