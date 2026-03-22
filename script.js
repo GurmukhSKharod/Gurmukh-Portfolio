@@ -1,31 +1,72 @@
 const header = document.querySelector("header");
+const menu = document.querySelector("#menu-icon");
+const navlist = document.querySelector(".navlist");
 
-window.addEventListener("scroll", function() {
-    header.classList.toggle("sticky",this.window.scrollY > 120);
-})
-let menu = document.querySelector("#menu-icon");
-let navlist = document.querySelector('.navlist');
+window.addEventListener("scroll", () => {
+    if (header) {
+        header.classList.toggle("sticky", window.scrollY > 120);
+    }
 
-menu.onclick = () =>{
-    menu.classList.toggle('bx-x');
-    navlist.classList.toggle('active');
-}
+    if (menu && navlist) {
+        menu.classList.remove("bx-x");
+        navlist.classList.remove("active");
+    }
+});
 
-window.onscroll = () =>{
-    menu.remove.toggle('bx-x');
-    navlist.remove.toggle('active');
-}
-
-// card functionality
-document.querySelectorAll('.row').forEach((card) => {
-    const githubIcon = card.querySelector('.github-icon');
-
-    card.addEventListener('click', (e) => {
-        // Prevent toggling description when GitHub icon is clicked
-        if (e.target === githubIcon || githubIcon.contains(e.target)) return;
-
-        card.classList.toggle('show-description'); // Toggle description visibility
+if (menu && navlist) {
+    menu.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menu.classList.toggle("bx-x");
+        navlist.classList.toggle("active");
     });
+
+    document.addEventListener("click", (e) => {
+        const clickedInsideMenu = e.target.closest(".navlist, #menu-icon");
+        if (!clickedInsideMenu) {
+            menu.classList.remove("bx-x");
+            navlist.classList.remove("active");
+        }
+    });
+}
+
+// card functionality for projects + experience
+document.querySelectorAll('.Projects-content .row, .experience-content .row').forEach((card) => {
+    card.addEventListener('click', (e) => {
+        const blockedClick = e.target.closest(
+            '.github-icon, .netlify-icon, .company-link, .languages .box'
+        );
+
+        if (blockedClick) return;
+
+        card.classList.toggle('show-description');
+    });
+});
+
+// one-time experience reveal
+document.addEventListener("DOMContentLoaded", () => {
+    const expCards = document.querySelectorAll(".experience-row.exp-anim");
+    if (!expCards.length) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion) {
+        expCards.forEach((card) => card.classList.add("is-visible"));
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.18,
+        rootMargin: "0px 0px -8% 0px"
+    });
+
+    expCards.forEach((card) => observer.observe(card));
 });
 
 // Email functionality from form to Contact Me

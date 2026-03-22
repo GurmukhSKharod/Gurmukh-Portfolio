@@ -41,20 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     AOS.init({ once: true, duration: 700 });
   }
 
-  // Mobile nav toggle
-  const menu = document.querySelector('#menu-icon');
-  const nav  = document.querySelector('.navlist');
-  if (menu && nav) {
-    menu.addEventListener('click', () => {
-      nav.classList.toggle('active');
-      menu.classList.toggle('bx-x');
-    });
-    window.addEventListener('scroll', () => {
-      nav.classList.remove('active');
-      menu.classList.remove('bx-x');
-    });
-  }
-
   /* =====================  SKILLS WHEEL  ===================== */
   const skillsSec = document.getElementById('skills');
   if (!skillsSec) return;
@@ -530,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <li><a href="#home">Home</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
   </ul>
 <div class="top-btnn">
@@ -804,6 +791,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gitlab/gitlab-original.svg" />
         <h3>GitLab</h3>
       </div>
+      <div class="box">
+        <img src="https://subversion.apache.org/logo/subversion_logo.svg" />
+        <h3>SVN</h3>
+      </div>
     </div>
   </div>
 
@@ -827,6 +818,125 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </section>
 
+<section class="experience" id="experience">
+  <div class="center-text" data-aos="fade-down" data-aos-duration="370">
+    <h2><span>Experience</span></h2>
+  </div>
+
+  <div class="experience-content">
+    <article class="row experience-row exp-anim">
+      <a
+        href="https://qnx.software/en"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="company-link experience-image-link"
+      >
+        <img src="./img/qnx.jpg" alt="BlackBerry QNX work sample">
+      </a>
+
+      <div class="experience-body">
+        <div class="main-row">
+          <h5>Jan 2026 - Present</h5>
+        </div>
+
+        <h4>BlackBerry QNX</h4>
+        <p class="experience-meta">Burnaby, BC, Canada</p>
+
+        <p class="experience-preview">
+          <span>Automotive media tuning</span>, <span>DSP workflows</span>, and <span>production audio tooling</span>.
+        </p>
+
+        <div class="description">
+          <ul class="experience-points">
+            <li><span>Learned</span> automotive media tuning, speaker behavior, sweeps, microphone capture, and frequency-response analysis.</li>
+            <li><span>Ported</span> DSP utilities from Python to C with matching production code, headers, and tests.</li>
+            <li><span>Added</span> measurement and post-processing tooling to improve automation, reliability, and repeatability.</li>
+          </ul>
+
+          <div class="languages experience-languages">
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" />
+              <h3>Python</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" />
+              <h3>C</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" />
+              <h3>C++</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" />
+              <h3>C#</h3>
+            </div>
+            <div class="box">
+              <img src="https://subversion.apache.org/logo/subversion_logo.svg" />
+              <h3>SVN</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="row experience-row exp-anim">
+      <a
+        href="https://www.firstinspires.org/programs/frc/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="company-link experience-image-link"
+      >
+        <img src="./img/first-robotics.jpg" alt="FIRST Robotics work sample">
+      </a>
+
+      <div class="experience-body">
+        <div class="main-row">
+          <h5>May 2017 - Jan. 2020</h5>
+        </div>
+
+        <h4>FIRST Robotics</h4>
+        <p class="experience-meta">Vancouver, BC</p>
+
+        <p class="experience-preview">
+          <span>Robotics software leadership</span>, <span>autonomous systems</span>, and <span>mentorship</span>.
+        </p>
+
+        <div class="description">
+          <ul class="experience-points">
+            <li><span>Led</span> software for a 60-member team, building autonomous C++ routines and improving robot reliability.</li>
+            <li><span>Worked</span> across software, mechanical, and electrical teams during fast 6-week build cycles.</li>
+            <li><span>Mentored</span> junior developers and supported outreach, demos, and competition troubleshooting.</li>
+          </ul>
+
+          <div class="languages experience-languages">
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" />
+              <h3>JavaScript</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" />
+              <h3>Java</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" />
+              <h3>C++</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" />
+              <h3>C</h3>
+            </div>
+            <div class="box">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
+              <h3>Git</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="projects" id="projects">
 
 <section class="projects" id="projects">
 <div class="center-text" data-aos="fade-down" data-aos-duration="370">
