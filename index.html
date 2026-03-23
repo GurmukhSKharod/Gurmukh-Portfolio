@@ -14,32 +14,11 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    const isMobile = window.innerWidth <= 768;
-
-    if (!isMobile) {
-      AOS.init({
-        offset: 300,
-        duration: 1400,
-      });
-    } else {
-      // Optional: instantly show all AOS elements without animation
-      document.querySelectorAll('[data-aos]').forEach(el => {
-        el.removeAttribute('data-aos');
-        el.style.opacity = 1;
-        el.style.transform = 'none';
-      });
-    }
-  </script>
 
 </head>
 <script>
 /* =====================  SITE BOILERPLATE  ===================== */
 document.addEventListener('DOMContentLoaded', () => {
-  // AOS (safe)
-  if (window.AOS && typeof AOS.init === 'function') {
-    AOS.init({ once: true, duration: 700 });
-  }
 
   /* =====================  SKILLS WHEEL  ===================== */
   const skillsSec = document.getElementById('skills');
@@ -399,21 +378,64 @@ document.addEventListener('DOMContentLoaded', () => {
       setOffset(el, inDir, inDX, inDY);
     });
 
+    // Initial setup: assign random IN directions + off-screen offsets
+    cards.forEach((el) => {
+      el.classList.add('proj-anim');
+      const inDir = pick(dirs);
+      const inDX = 140 + Math.round(Math.random() * 80);
+      const inDY = 140 + Math.round(Math.random() * 80);
+      setOffset(el, inDir, inDX, inDY);
+    });
+
+    let projectsShown = false;
+
+    const revealProjects = () => {
+      if (projectsShown) return;
+      projectsShown = true;
+
+      cards.forEach((el, idx) => {
+        el.style.transitionDelay = `${idx * STAGGER_MS}ms`;
+        requestAnimationFrame(() => el.classList.add('is-in'));
+      });
+
+      if (io) io.disconnect();
+    };
+
+    const projectsInView = () => {
+      const rect = projectsSection.getBoundingClientRect();
+      return rect.top < window.innerHeight * 0.92 && rect.bottom > window.innerHeight * 0.08;
+    };
+
     const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Staggered fly-in: 0ms, 330ms, 660ms, ...
-          cards.forEach((el, idx) => {
-            el.dataset.outDir = pick(dirs);
-            el.style.transitionDelay = `${idx * STAGGER_MS}ms`;
-            requestAnimationFrame(() => el.classList.add('is-in'));
-          });
-        } else {
+          revealProjects();
         }
       });
-    }, { root: null, threshold: 0.35 });
+    }, {
+      root: null,
+      threshold: 0.02,
+      rootMargin: '0px 0px -8% 0px'
+    });
 
     io.observe(projectsSection);
+
+    // important: if page refreshes while already on Projects, show them immediately
+    if (projectsInView()) {
+      revealProjects();
+    }
+
+    window.addEventListener('load', () => {
+      if (projectsInView()) revealProjects();
+    });
+
+    window.addEventListener('pageshow', () => {
+      if (projectsInView()) revealProjects();
+    });
+
+    window.addEventListener('resize', () => {
+      if (projectsInView()) revealProjects();
+    });
   });
 })();
 </script>
@@ -518,10 +540,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
-<div class="top-btnn">
-  <a href="#contact" class="h-btn">Contact me</a>
-</div>
 
 </header>
 
@@ -553,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 
   <div class="about-text">
-    <h2 class="reveal-item">I am a <span>Full-Stack Developer</span></h2>
+    <h2 class="reveal-item">I am a <span>Full-Stack Engineer</span></h2>
 
     <ul class="info-list">
       <li class="reveal-item"><span class="label">Speciality:</span> <span class="value">Full Stack Developer</span></li>
@@ -851,9 +871,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="description">
           <ul class="experience-points">
-            <li><span>Learned</span> automotive media tuning, speaker behavior, sweeps, microphone capture, and frequency-response analysis.</li>
-            <li><span>Ported</span> DSP utilities from Python to C with matching production code, headers, and tests.</li>
-            <li><span>Added</span> measurement and post-processing tooling to improve automation, reliability, and repeatability.</li>
+            <li><span>Built</span> a strong understanding of <span>automotive audio workflows</span>, including <span>speaker measurements</span>, <span>test signals</span>, <span>microphone capture</span>, and the role of measurement data in media tuning.</li>
+            <li><span>Designed and implemented</span> embedded audio features in <span>C</span>, learning how <span>frequency bins</span>, <span>Gain Matrices</span>, <span>FFTs</span>, <span>routing</span>, and <span>channel configurations</span> affect playback behavior across different speaker paths.</li>
+            <li><span>Expanded</span> knowledge of <span>audio post-processing</span> and <span>filtering pipelines</span> by helping translate <span>Python-based DSP workflows</span> into <span>C/C++ tools</span> for more automated and repeatable measurement analysis.</li>
           </ul>
 
           <div class="languages experience-languages">
@@ -909,9 +929,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="description">
           <ul class="experience-points">
-            <li><span>Led</span> software for a 60-member team, building autonomous C++ routines and improving robot reliability.</li>
-            <li><span>Worked</span> across software, mechanical, and electrical teams during fast 6-week build cycles.</li>
-            <li><span>Mentored</span> junior developers and supported outreach, demos, and competition troubleshooting.</li>
+            <li><span>Served</span> as <span>Lead Programmer</span> for a <span>60-member team</span>, building <span>autonomous C++ routines</span> and tuning <span>encoder feedback</span> with firmware-hardware integration to meet <span>FRC specifications</span> and improve autonomous reliability.</li>
+            <li><span>Coordinated</span> a <span>cross-functional 6-week sprint</span> with mechanical and electrical teams, using <span>checklists</span>, <span>test harnesses</span>, and <span>demo simulations</span> to de-risk integration and accelerate development under deadlines.</li>
+            <li><span>Collaborated</span> with various engineering divisions at <span>regional</span> and <span>world events</span> in <span>Victoria</span> and <span>Houston</span>, executing rapid triage with <span>real-time validation</span> to adapt to hardware changes and keep the robot competition-ready.</li>
+            <li><span>Mentored</span> junior developers in workshops and competitions, led sponsored community demos, and taught robotics for real-world issues such as <span>energy conservation</span> to earn the <span>FIRST Chairman’s Award</span> for outstanding outreach.</li>
           </ul>
 
           <div class="languages experience-languages">
@@ -928,8 +949,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <h3>C++</h3>
             </div>
             <div class="box">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" />
-              <h3>C</h3>
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eclipse/eclipse-original.svg" />
+              <h3>Eclipse</h3>
             </div>
             <div class="box">
               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
@@ -943,13 +964,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </section>
 
 <section class="projects" id="projects">
-
-<section class="projects" id="projects">
 <div class="center-text" data-aos="fade-down" data-aos-duration="370">
   <h2><span>Projects</span></h2>
 </div>
-<div class="Projects-content" data-aos="zoom-in-up" data-aos-duration="370">
-
+<div class="Projects-content">
 
   <div class="row"> 
     <img src="./img/PDT.jpg" alt="Package Management System">
@@ -1248,10 +1266,39 @@ document.addEventListener('DOMContentLoaded', () => {
   
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (isMobile || reduceMotion) {
+    document.querySelectorAll('[data-aos]').forEach((el) => {
+      el.removeAttribute('data-aos');
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.transition = 'none';
+    });
+    return;
+  }
+
   AOS.init({
-offset:300,
-duration:1400,
+    once: true,
+    offset: 120,
+    duration: 900,
+    mirror: false
   });
+
+  const refreshAOS = () => {
+    if (window.AOS) AOS.refreshHard();
+  };
+
+  window.addEventListener('load', refreshAOS);
+  window.addEventListener('pageshow', refreshAOS);
+
+  document.querySelectorAll('img').forEach((img) => {
+    if (img.complete) return;
+    img.addEventListener('load', refreshAOS, { once: true });
+  });
+});
 </script>
 
 </body>

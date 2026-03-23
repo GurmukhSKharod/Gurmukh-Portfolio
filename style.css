@@ -585,6 +585,10 @@ header.sticky {
     width: 100%;
 }
 
+.Projects-content .row {
+    opacity: 1;
+}
+
 /* === Projects: fly-in/out animations (desktop only) === */
 .row.proj-anim{
   opacity: 0;
@@ -794,6 +798,38 @@ header.sticky {
     cursor: default;
 }
 
+/* Experience language cards: allow hover growth without clipping */
+.experience-row {
+    position: relative;
+}
+
+.experience-row.show-description {
+    overflow: visible;
+    z-index: 3;
+}
+
+.experience-row.show-description .description {
+    overflow: visible;
+}
+
+.experience-languages {
+    overflow: visible;
+    padding: 10px 10px 18px;
+}
+
+.experience-languages .box {
+    position: relative;
+    z-index: 1;
+    transform-origin: center;
+}
+
+.experience-languages .box:hover,
+.experience-languages .box:active {
+    transform: scale(1.08);
+    z-index: 5;
+    box-shadow: 0px 4px 15px rgba(19, 187, 255, 0.4);
+}
+
 /* Language Icons */
 .languages .box img {
     width: 30px; /* Icon size */
@@ -977,10 +1013,15 @@ header.sticky {
 }
 
 @media (max-width: 900px) {
+    .experience-content {
+        gap: 3rem;
+    }
+
     .experience-row {
         grid-template-columns: 1fr;
         align-items: start;
         gap: 1.3rem;
+        overflow: visible;
     }
 
     .experience-image-link {
@@ -1003,6 +1044,13 @@ header.sticky {
     .experience-languages {
         justify-content: center;
         justify-items: center;
+        overflow: visible;
+        padding: 10px 6px 20px;
+    }
+
+    .experience-languages .box:hover,
+    .experience-languages .box:active {
+        transform: scale(1.05);
     }
 }
 
@@ -1496,14 +1544,18 @@ form .send-btn:hover {
     }
 
     :root {
-        --h1-font:3.5rem;
+        --h1-font: 3.5rem;
     }
 
     .social {
         margin-bottom: 20px;
     }
 
-    #menu-icon{
+    .h-btn {
+        display: none;
+    }
+
+    #menu-icon {
         display: block;
         padding: 10px;
         font-size: 34px;
@@ -1515,42 +1567,75 @@ form .send-btn:hover {
     .navlist {
         position: fixed;
         top: 78px;
-        left: 0;
-        right: 0;
-        width: 100%;
+        right: 8%;
+        left: auto;
+        width: min(320px, calc(100vw - 16%));
         min-height: 0;
         display: flex;
         flex-direction: column;
-        gap: 0;
-        background: var(--bg-color);
-        border-top: 1px solid rgba(255,255,255,0.08);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-        padding: 10px 0 16px;
-        transform: translateY(-14px);
+        gap: 0.35rem;
+        background: rgba(27, 31, 36, 0.96);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(19, 187, 255, 0.14);
+        border-radius: 18px;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+        padding: 10px;
+        transform-origin: top right;
+        transform: translate(18px, -18px) scale(0.94);
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
-        transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+        transition:
+            opacity 0.28s ease,
+            transform 0.34s cubic-bezier(.16,.84,.28,1),
+            visibility 0.28s ease;
         z-index: 999;
     }
 
     .navlist li {
         width: 100%;
+        opacity: 0;
+        transform: translateX(18px) scale(0.97);
+        transition:
+            opacity 0.28s ease,
+            transform 0.36s cubic-bezier(.16,.84,.28,1);
     }
 
     .navlist a {
         display: block;
         width: 100%;
-        padding: 16px 8%;
-        font-size: 20px;
+        padding: 14px 16px;
+        font-size: 18px;
+        border-radius: 12px;
+    }
+
+    .navlist a::after {
+        display: none;
+    }
+
+    .navlist a:hover {
+        background: rgba(19, 187, 255, 0.08);
+        text-shadow: none;
     }
 
     .navlist.active {
-        transform: translateY(0);
+        transform: translate(0, 0) scale(1);
         opacity: 1;
         pointer-events: auto;
         visibility: visible;
     }
+
+    .navlist.active li {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    .navlist.active li:nth-child(1) { transition-delay: 0.03s; }
+    .navlist.active li:nth-child(2) { transition-delay: 0.07s; }
+    .navlist.active li:nth-child(3) { transition-delay: 0.11s; }
+    .navlist.active li:nth-child(4) { transition-delay: 0.15s; }
+    .navlist.active li:nth-child(5) { transition-delay: 0.19s; }
 }
 
 @media (max-width: 768px) {
@@ -1587,6 +1672,13 @@ form .send-btn:hover {
     width: 100%;
 }
     
+}
+
+@media (max-width: 1440px) {
+    .hero {
+        background-image: none;
+        background: var(--bg-color);
+    }
 }
 
 
